@@ -8,13 +8,20 @@ public readonly struct ResultWithdrawalOption
 
     public IEnumerable<WithdrawalOption> Options { get; init; }
 
-    public ResultWithdrawalOption(IEnumerable<IEnumerable<BillAmmount>> options, IEnumerable<BillAmmount> ammountAvailable)
+    public ResultWithdrawalOption()
+    {
+        Result = WithdrawalResult.UnavailableFunds;
+        Options = Enumerable.Empty<WithdrawalOption>();
+    }
+
+
+    public ResultWithdrawalOption(IEnumerable<IEnumerable<BillAmount>> options, IEnumerable<BillAmount> amountAvailable)
     {
 
-        if (options != null && ammountAvailable != null)
+        if (options != null && amountAvailable != null)
         {
             decimal maxQuantityBill = options.Select(b => b.Sum(i => i.Quantity)).Max();
-            Options = options.Select(option => BuildOption(option, ammountAvailable, maxQuantityBill)).ToImmutableList();
+            Options = options.Select(option => BuildOption(option, amountAvailable, maxQuantityBill)).ToImmutableList();
             Result = WithdrawalResult.AvailableFunds;
         }
         else
@@ -25,14 +32,14 @@ public readonly struct ResultWithdrawalOption
        
     }
 
-    private static WithdrawalOption BuildOption(IEnumerable<BillAmmount> option, IEnumerable<BillAmmount> denominations, decimal maxQuantityBill)
+    private static WithdrawalOption BuildOption(IEnumerable<BillAmount> option, IEnumerable<BillAmount> denominations, decimal maxQuantityBill)
     {
         decimal scoreByMaxBill = (maxQuantityBill == 0) ? 0 : (option.Sum(b => b.Quantity) / maxQuantityBill);
         decimal scoreByDenomination = GetScoreByDenomination(option, denominations);
         return new WithdrawalOption(option, scoreByMaxBill + scoreByDenomination);
     }
 
-    private static decimal GetScoreByDenomination(IEnumerable<BillAmmount> option, IEnumerable<BillAmmount> denominations)
+    private static decimal GetScoreByDenomination(IEnumerable<BillAmount> option, IEnumerable<BillAmount> denominations)
     {
         var missingDenomination = GetMissingDenomination(option, denominations);
         decimal quantityBills = option.Sum(x => x.Quantity);
@@ -46,11 +53,11 @@ public readonly struct ResultWithdrawalOption
         }).Sum();
     }
 
-    private static IEnumerable<BillAmmount> GetMissingDenomination(IEnumerable<BillAmmount> option, IEnumerable<BillAmmount> denominations)
+    private static IEnumerable<BillAmount> GetMissingDenomination(IEnumerable<BillAmount> option, IEnumerable<BillAmount> denominations)
     {
         return denominations
                    .ExceptBy(option.Select(x => x.Denomination), b => b.Denomination)
-                   .Select(x => new BillAmmount(x.Denomination, 0));
+                   .Select(x => new BillAmount(x.Denomination, 0));
     }
 
     

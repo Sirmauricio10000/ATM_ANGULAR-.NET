@@ -1,4 +1,5 @@
 using ATM.Data;
+using ATM.Logic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,14 +10,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ATMContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("defaul"))
+    options.UseSqlServer(builder.Configuration.GetConnectionString("default"))
 );
+builder.Services.AddScoped<TransactionlService>();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    });
 }
 
 app.UseStaticFiles();

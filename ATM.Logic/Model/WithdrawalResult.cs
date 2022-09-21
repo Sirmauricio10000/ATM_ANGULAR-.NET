@@ -2,6 +2,6 @@
 
 public enum WithdrawalResult
 {
-    AvailableFunds,
-    UnavailableFunds
+    UnavailableFunds,
+    AvailableFunds
 }

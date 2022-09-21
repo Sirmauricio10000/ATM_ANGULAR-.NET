@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ATM.Core.Model
 {
@@ -6,7 +7,6 @@ namespace ATM.Core.Model
     {
         public int Denomination { get; set; }
         public int Quantity { get; set; }
-
         public string TransactionId { get; set; }
 
         [ForeignKey(nameof(TransactionId))]

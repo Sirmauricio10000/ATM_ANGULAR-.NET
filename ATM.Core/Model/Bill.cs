@@ -21,6 +21,6 @@ namespace ATM.Core.Model
         public int Quantity { get; set; }
 
         [NotMapped]
-        public int Ammount => Denomination * Quantity;
+        public int Amount => Denomination * Quantity;
     }
 }

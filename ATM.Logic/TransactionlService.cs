@@ -11,30 +11,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ATM.Logic
 {
-    public class WithdrawalService
+    public class TransactionlService
     {
         private readonly ATMContext context;
 
-        public WithdrawalService(ATMContext context)
+        public TransactionlService(ATMContext context)
         {
             this.context = context;
         }
 
 
-        public async Task<TransactionResult> Withdraw(int ammount)
+        public async Task<TransactionResult> Withdraw(int amount)
         {
-            var bills = await GetAmmounts();
-            var options = GenerateWithdrawalOptions(bills, ammount);
+            var bills = await GetAmounts();
+            var options = GenerateWithdrawalOptions(bills, amount);
 
             if(options.Result == WithdrawalResult.AvailableFunds)
             {
                 var chosenOption = options.Options.OrderBy(o => o.Score).First();
-                var newBillAmmounts = bills.Select(b => new Bill() {
+                var newBillAmounts = chosenOption.Bills.Select(b => new Bill() {
                     Denomination = b.Denomination,
-                    Quantity = b.Quantity - chosenOption.Bills.Single(x => x.Denomination == b.Denomination).Quantity
+                    Quantity = bills.Single(x => x.Denomination == b.Denomination).Quantity - b.Quantity
                 }).ToList();
 
-                context.UpdateRange(newBillAmmounts);
+                context.UpdateRange(newBillAmounts);
                 await context.SaveChangesAsync();
                 return new TransactionResult(TransactionStatus.Success, chosenOption.Bills);
             }
@@ -42,35 +42,35 @@ namespace ATM.Logic
             return new TransactionResult(TransactionStatus.UnavailableFunds);
         }
 
-        public async Task<ResultWithdrawalOption> GetWithdrawalAvailableOptions(int ammount)
+        public async Task<ResultWithdrawalOption> GetWithdrawalAvailableOptions(int amount)
         {
-            var bills = await GetAmmounts();
-            return GenerateWithdrawalOptions(bills, ammount);
+            var bills = await GetAmounts();
+            return GenerateWithdrawalOptions(bills, amount);
         }
 
-        private async Task<IEnumerable<BillAmmount>> GetAmmounts()
+        public async Task<IEnumerable<BillAmount>> GetAmounts()
         {
-            return (await context.Bills.ToListAsync())
-                .Select(x => new BillAmmount(x.Denomination, x.Quantity));
+            return (await context.Bills.AsNoTracking().ToListAsync())
+                .Select(x => new BillAmount(x.Denomination, x.Quantity));
         }
 
 
-        private ResultWithdrawalOption GenerateWithdrawalOptions(IEnumerable<BillAmmount> bills, int ammount)
+        private ResultWithdrawalOption GenerateWithdrawalOptions(IEnumerable<BillAmount> bills, int amount)
         {
-            var availableAmmount = bills.Sum(b => b.Ammount);
+            var availableAmount = bills.Sum(b => b.Amount);
 
-            if (availableAmmount < ammount)
+            if (availableAmount < amount)
                 return new ResultWithdrawalOption();
 
 
-            var combinations = new AmmountManager(bills.OrderByDescending(x => x.Denomination));
-            var options = new List<IEnumerable<BillAmmount>>();
+            var combinations = new AmountManager(bills.OrderByDescending(x => x.Denomination));
+            var options = new List<IEnumerable<BillAmount>>();
             var anyOptions = true;
 
 
             while (anyOptions)
             {
-                var (withdrawalOption, remainer) = GenerateWithdrawalOption(combinations, ammount);
+                var (withdrawalOption, remainer) = GenerateWithdrawalOption(combinations, amount);
 
                 combinations.SetAmount(withdrawalOption);
 
@@ -80,10 +80,10 @@ namespace ATM.Logic
                 }
 
                 var reduceBill = combinations.Take(0..^1).Where(x => x.Quantity != 0)
-                    .Select<BillAmmount, BillAmmount?>(x => x).LastOrDefault();
+                    .Select<BillAmount, BillAmount?>(x => x).LastOrDefault();
 
 
-                if (reduceBill is BillAmmount bill)
+                if (reduceBill is BillAmount bill)
                 {
                     var denominations = combinations.Select(x => x.Denomination).ToList();
 
@@ -114,14 +114,14 @@ namespace ATM.Logic
             return new ResultWithdrawalOption();
         }
 
-        private (IEnumerable<BillAmmount> bills, int remainer) GenerateWithdrawalOption(IEnumerable<BillAmmount> denominationsAvailable, int ammount)
+        private (IEnumerable<BillAmount> bills, int remainer) GenerateWithdrawalOption(IEnumerable<BillAmount> denominationsAvailable, int amount)
         {
-            int remainder = ammount;
+            int remainder = amount;
 
-            var bills = new List<BillAmmount>();
+            var bills = new List<BillAmount>();
 
             var denominations = denominationsAvailable
-                .Where(x => x.Denomination <= ammount && x.Quantity > 0)
+                .Where(x => x.Denomination <= amount && x.Quantity > 0)
                 .OrderByDescending(x => x.Denomination);
 
             foreach (var item in denominations)
@@ -139,7 +139,7 @@ namespace ATM.Logic
                     remainder = remainderResult;
                 }
 
-                bills.Add(new BillAmmount(item.Denomination, quotientResult));
+                bills.Add(new BillAmount(item.Denomination, quotientResult));
 
                 if (remainder == 0)
                 {

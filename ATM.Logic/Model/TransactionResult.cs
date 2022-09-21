@@ -12,15 +12,16 @@ public class TransactionResult
     public TransactionResult(TransactionStatus status)
     {
         Status = status;
+        Amount = Enumerable.Empty<BillAmount>();
     }
 
-    public TransactionResult(TransactionStatus status, IEnumerable<BillAmmount> ammount)
+    public TransactionResult(TransactionStatus status, IEnumerable<BillAmount> amount)
     {
         Status = status;
-        Ammount = ammount;
+        Amount = amount;
     }
 
     public TransactionStatus Status { get; set; }
 
-    public IEnumerable<BillAmmount> Ammount { get; set; }
+    public IEnumerable<BillAmount> Amount { get; set; }
 }

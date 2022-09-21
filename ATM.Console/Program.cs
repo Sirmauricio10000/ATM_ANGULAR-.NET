@@ -8,20 +8,20 @@ using System.Runtime.Serialization;
 int retiro = 200;
 
 
-var reserves = new Amount(new[] {
-    //new Bill(5, 10),
-    new Bill(10, 40),
-    new Bill(20, 1),
-    new Bill(50, 3),
-    new Bill(100, 2),
-});
+//var reserves = new Amount(new[] {
+//    //new Bill(5, 10),
+//    new Bill(10, 40),
+//    new Bill(20, 1),
+//    new Bill(50, 3),
+//    new Bill(100, 2),
+//});
 
-var disponible = reserves.Total;
+//var disponible = reserves.Total;
 
-Console.WriteLine(disponible);
+//Console.WriteLine(disponible);
 
 
-var resultTransaction = WithdrawalOptions(reserves, retiro);
+//var resultTransaction = WithdrawalOptions(reserves, retiro);
 
 //if (resultTransaction.Result == ResultTransaction.AvailableFunds)
 //{
