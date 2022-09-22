@@ -32,24 +32,25 @@ public readonly struct ResultWithdrawalOption
        
     }
 
-    private static WithdrawalOption BuildOption(IEnumerable<BillAmount> option, IEnumerable<BillAmount> denominations, decimal maxQuantityBill)
+    private static WithdrawalOption BuildOption(IEnumerable<BillAmount> option, IEnumerable<BillAmount> amountAvailable, decimal maxQuantityBill)
     {
         decimal scoreByMaxBill = (maxQuantityBill == 0) ? 0 : (option.Sum(b => b.Quantity) / maxQuantityBill);
-        decimal scoreByDenomination = GetScoreByDenomination(option, denominations);
+        decimal scoreByDenomination = GetScoreByDenomination(option, amountAvailable);
         return new WithdrawalOption(option, scoreByMaxBill + scoreByDenomination);
     }
 
-    private static decimal GetScoreByDenomination(IEnumerable<BillAmount> option, IEnumerable<BillAmount> denominations)
+    private static decimal GetScoreByDenomination(IEnumerable<BillAmount> option, IEnumerable<BillAmount> availableAmounts)
     {
-        var missingDenomination = GetMissingDenomination(option, denominations);
+        var missingDenomination = GetMissingDenomination(option, availableAmounts);
         decimal quantityBills = option.Sum(x => x.Quantity);
+        decimal totalAmount = option.Sum(x => x.Amount);
 
         return option.Concat(missingDenomination).Select(b =>
         {
-            decimal available = denominations.FirstOrDefault(i => i.Denomination == b.Denomination).Quantity;
+            decimal available = availableAmounts.FirstOrDefault(i => i.Denomination == b.Denomination).Quantity;
             decimal ratioDenomination = (available == 0) ? 0 : (b.Quantity / available);
-            decimal ratioDistribution = (b.Quantity / quantityBills) < 0.1M ? 0.1M : 0;
-            return ratioDenomination * ratioDenomination * 0.8M + ratioDistribution * 0.2M;
+            decimal ratioDistribution = (b.Quantity * b.Denomination / totalAmount) < 0.05M ? 0.05M : 0;
+            return ratioDenomination * ratioDenomination + ratioDistribution;
         }).Sum();
     }
 

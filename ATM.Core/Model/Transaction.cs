@@ -9,6 +9,11 @@
         public TransactionType Type { get; set; }
 
 
-        public IEnumerable<AmountTransaction> Amount { get; set; }
+        public ICollection<AmountTransaction> Amount { get; set; } = new List<AmountTransaction>();
+
+        public Transaction()
+        {
+
+        }
     }
 }

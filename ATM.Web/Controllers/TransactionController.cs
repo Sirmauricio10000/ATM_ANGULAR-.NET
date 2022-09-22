@@ -17,14 +17,14 @@ namespace ATM.Web.Controllers
             this.service = service;
         }
 
-        [HttpGet("AmountAvailable")]
+        [HttpGet(nameof(AmountAvailable))]
         public async Task<IEnumerable<BillAmount>> AmountAvailable()
         {
             var result = await service.GetAmounts();
             return result.ToList();
         }
 
-        [HttpGet("WithdrawalOptions")]
+        [HttpGet(nameof(GetOptionForAmount))]
         public async Task<IEnumerable<WithdrawalOption>> GetOptionForAmount(int amount)
         {
             var result = await service.GetWithdrawalAvailableOptions(amount);
@@ -34,11 +34,32 @@ namespace ATM.Web.Controllers
                 .ToList();
         }
 
-        [HttpGet("Withdraw")]
+        [HttpPost(nameof(Withdraw))]
         public async Task<TransactionResult> Withdraw(int amount)
         {
             return await service.Withdraw(amount);
         }
+
+        [HttpPost(nameof(UpdateAmounts))]
+        public async Task<IActionResult> UpdateAmounts(IEnumerable<BillAmount> amounts)
+        {
+            await service.UpdateReserve(amounts);
+            return Ok();
+        }
+
+        [HttpPost(nameof(DepositAmounts))]
+        public async Task<IActionResult> DepositAmounts(IEnumerable<BillAmount> amounts)
+        {
+            await service.DepositAmounts(amounts);
+            return Ok();
+        }
+
     }
+
+
+
+
+
+
 
 }
