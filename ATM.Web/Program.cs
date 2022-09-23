@@ -14,6 +14,14 @@ builder.Services.AddDbContext<ATMContext>(options =>
 );
 builder.Services.AddScoped<TransactionlService>();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy(name: "cors-policy", policy =>
+    {
+        policy.AllowAnyOrigin();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -29,7 +37,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseCors("cors-policy");
 
 app.MapControllerRoute(
     name: "default",

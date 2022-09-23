@@ -58,22 +58,22 @@ namespace ATM.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Denomination = 10,
+                            Denomination = 10000,
                             Quantity = 30
                         },
                         new
                         {
-                            Denomination = 20,
+                            Denomination = 20000,
                             Quantity = 25
                         },
                         new
                         {
-                            Denomination = 50,
+                            Denomination = 50000,
                             Quantity = 20
                         },
                         new
                         {
-                            Denomination = 100,
+                            Denomination = 100000,
                             Quantity = 15
                         });
                 });

@@ -47,9 +47,10 @@ public readonly struct ResultWithdrawalOption
 
         return option.Concat(missingDenomination).Select(b =>
         {
+            decimal ratioTotalAmount = (b.Quantity * b.Denomination / totalAmount);
             decimal available = availableAmounts.FirstOrDefault(i => i.Denomination == b.Denomination).Quantity;
             decimal ratioDenomination = (available == 0) ? 0 : (b.Quantity / available);
-            decimal ratioDistribution = (b.Quantity * b.Denomination / totalAmount) < 0.05M ? 0.05M : 0;
+            decimal ratioDistribution = ratioTotalAmount < 0.05M ? 0.05M - ratioTotalAmount : 0;
             return ratioDenomination * ratioDenomination + ratioDistribution;
         }).Sum();
     }

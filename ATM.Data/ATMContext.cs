@@ -15,10 +15,10 @@ namespace ATM.Data
             builder.Entity<Bill>()
                 .HasData(new[]
                 {
-                    new Bill(10, 30),
-                    new Bill(20, 25),
-                    new Bill(50, 20),
-                    new Bill(100, 15),
+                    new Bill(10_000, 30),
+                    new Bill(20_000, 25),
+                    new Bill(50_000, 20),
+                    new Bill(100_000, 15),
                 });
 
             builder.Entity<AmountTransaction>()

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ATM.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class TransactionController : ControllerBase
     {
         private readonly TransactionlService service;
@@ -17,8 +17,8 @@ namespace ATM.Web.Controllers
             this.service = service;
         }
 
-        [HttpGet(nameof(AmountAvailable))]
-        public async Task<IEnumerable<BillAmount>> AmountAvailable()
+        [HttpGet(nameof(GetAmountAvailable))]
+        public async Task<IEnumerable<BillAmount>> GetAmountAvailable()
         {
             var result = await service.GetAmounts();
             return result.ToList();
