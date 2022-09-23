@@ -1,19 +1,38 @@
-<mat-tab-group>
-  <mat-tab label="Estado">
-    <div>
-      <span class="title">Monto Disponible: {{totalAmount | currency: "COP "}}</span>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+<div class="home-section">
+  <div>
+    <span class="title">Monto Disponible: {{totalAmount | currency: "COP "}}</span>
+  </div>
+  <div class="bills-section">
+    <div class="bill-container" *ngFor="let b of amounts">
+      <img src="/images/bills/anverso{{b.denomination}}.png">
+      <div class="bill-info-quantity">{{b.quantity}}</div>
+      <div class="bill-info-amount">{{b.amount | currency: "COP "}}</div>
     </div>
-    <div class="bills-section">
-      <div class="bill-container" *ngFor="let b of amounts">
-        <img src="/images/bills/anverso{{b.denomination}}.png">
-        <div class="bill-info-quantity">{{b.quantity}}</div>
-        <div class="bill-info-amount">{{b.amount | currency: "COP "}}</div>
+  </div>
+  <div class="withdraw-section">
+    <div class="atm-machine">
+      <img src="/images/atm-machine.jpg">
+    </div>
+    <div class="withdraw-form">
+      <div>
+        <span class="title-withdraw">Retirar</span>
       </div>
-    </div>
+      <mat-chip-list aria-label="Fish selection">
+        <mat-chip color="primary" [selected]="a == amountControl.value" *ngFor="let a of withdrawAmounts" (click)="amountControl.setValue(a)">{{a | currency}} </mat-chip>
+      </mat-chip-list>
 
-    <div class="withdraw-section">
+      <mat-form-field class="form-field-value" appearance="fill" floatLabel="always">
+        <mat-label>Amount</mat-label>
+        <input matInput type="number" class="example-right-align" placeholder="0" [formControl]="amountControl" >
+        <mat-icon class="icon-paid" matPrefix>paid</mat-icon>
+        <mat-error *ngIf="amountControl.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
 
+      <button class="btn-withdraw"  matSuffix mat-stroked-button color="primary" (click)="withdraw()">
+        Retirar
+      </button>
     </div>
-  </mat-tab>
-  <mat-tab label="Historial"> Content 2 </mat-tab>
-</mat-tab-group>
+  </div>
+</div>

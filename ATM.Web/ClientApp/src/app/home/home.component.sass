@@ -10,6 +10,19 @@
   display: block
   font-weight: 500
 
+
+
+.atm-machine
+
+
+  img
+    max-width: 400px
+    display: block
+    margin: auto
+
+
+
+
 .bills-section
   display: flex
   gap: 1.1em
@@ -21,7 +34,14 @@
   .bill-container
     position: relative
     overflow: hidden
-    box-shadow: 3px 3px 5px #b2b2b2
+    box-shadow: 3px 3px 3px #b2b2b2
+    transform: scale(1)
+    transition: .3s ease
+    background: transparent
+
+    img
+      max-width: 300px
+      user-select: none
 
     .bill-info-quantity
       padding: 1.2em 1.2em 1em 1em
@@ -55,24 +75,58 @@
       user-select: none
       transition: .3s ease
 
+    &:hover
+      transform: translateY(-5%)
 
-    &:hover .bill-info-amount
-      //justify-content: center
-      align-items: center
-      background: rgba(0, 0, 0, 0.80)
-
-
+      .bill-info-amount
+        background: rgba(0, 0, 0, 0.70)
 
 
-    //&:after
-    //  content: ''
-    //  position: absolute
-    //  left: 0
-    //  right: 0
-      //width: 100%
-      //height: 100%
-      //background: rgba(0, 0, 0, 0.38)
+.withdraw-section
+  display: flex
 
-  img
-    max-width: 300px
-    user-select: none
+  .withdraw-form
+    padding-left: 2em
+
+.title-withdraw
+  font-size: 25px
+  padding: 0.5em
+  margin-top: 1em
+  text-align: left
+  display: block
+  font-weight: 500
+
+.form-field-value
+  margin-top: 2em
+
+
+.btn-withdraw
+  display: block
+
+
+.icon-paid
+  margin-right: 0.5em
+
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+  -webkit-appearance: none
+  margin: 0
+
+/* Firefox */
+input[type=number]
+  -moz-appearance: textfield
+
+
+//&:after
+  //  content: ''
+  //  position: absolute
+  //  left: 0
+  //  right: 0
+    //width: 100%
+    //height: 100%
+    //background: rgba(0, 0, 0, 0.38)
+
+
