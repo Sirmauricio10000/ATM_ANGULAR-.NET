@@ -19,6 +19,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatChipsModule} from "@angular/material/chips";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {MatButtonModule} from "@angular/material/button";
+import {MatTableModule} from "@angular/material/table";
 
 
 export const BASE_API = new InjectionToken<string>('base_url', {
@@ -35,26 +36,27 @@ export const BASE_API = new InjectionToken<string>('base_url', {
     CounterComponent,
     FetchDataComponent,
   ],
-  imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
-    HttpClientModule,
-    FormsModule,
-    RouterModule.forRoot([
-      {path: '', component: HomeComponent, pathMatch: 'full'},
-      {path: 'counter', component: CounterComponent},
-      {path: 'fetch-data', component: FetchDataComponent},
-    ]),
-    BrowserAnimationsModule,
-    MatTabsModule,
-    MatBadgeModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatChipsModule,
-    DragDropModule,
-    MatButtonModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+        HttpClientModule,
+        FormsModule,
+        RouterModule.forRoot([
+            {path: '', component: HomeComponent, pathMatch: 'full'},
+            {path: 'counter', component: CounterComponent},
+            {path: 'fetch-data', component: FetchDataComponent},
+        ]),
+        BrowserAnimationsModule,
+        MatTabsModule,
+        MatBadgeModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatChipsModule,
+        DragDropModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatTableModule
+    ],
   providers: [TransactionService],
   bootstrap: [AppComponent]
 })

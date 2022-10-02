@@ -1,6 +1,7 @@
 ﻿using ATM.Data;
 using ATM.Logic;
 using ATM.Logic.Model;
+using ATM.Web.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,20 @@ namespace ATM.Web.Controllers
             return result.ToList();
         }
 
+        [HttpGet(nameof(GetTransactions))]
+        public async Task<IEnumerable<TransactionData>> GetTransactions()
+        {
+            var result = await service.GetTransactionsAsync();
+            return result.Select(x => new TransactionData()
+            {
+                Id = x.Id,
+                Type = x.Type,
+                DateTime = x.DateTime,
+                Amount = x.Amount.Select(a => new BillAmount(a.Denomination, a.Quantity))
+            });
+        }
+
+
         [HttpGet(nameof(GetOptionForAmount))]
         public async Task<IEnumerable<WithdrawalOption>> GetOptionForAmount(int amount)
         {
@@ -35,9 +50,9 @@ namespace ATM.Web.Controllers
         }
 
         [HttpPost(nameof(Withdraw))]
-        public async Task<TransactionResult> Withdraw(int amount)
+        public async Task<TransactionResult> Withdraw(WithdrawAmount withdraw)
         {
-            return await service.Withdraw(amount);
+            return await service.Withdraw(withdraw.Amount);
         }
 
         [HttpPost(nameof(UpdateAmounts))]
