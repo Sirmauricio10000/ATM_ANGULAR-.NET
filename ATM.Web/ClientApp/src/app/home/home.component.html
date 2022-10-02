@@ -33,6 +33,23 @@
       <button class="btn-withdraw"  matSuffix mat-stroked-button color="primary" (click)="withdraw()">
         Retirar
       </button>
+
+      <div class="withdraw-details-section" *ngIf="currentWithdraw?.length">
+        <div class="bills-section">
+          <div class="bill-container bill-container-min" *ngFor="let b of currentWithdraw">
+            <img src="/images/bills/anverso{{b.denomination}}.png">
+            <div class="bill-info-quantity">{{b.quantity}}</div>
+            <div class="bill-info-amount">{{b.amount | currency: "COP "}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        {{mesage}}
+      </div>
+
     </div>
+
+
   </div>
 </div>

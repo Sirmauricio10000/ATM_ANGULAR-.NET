@@ -4,6 +4,7 @@
     {
         Success,
         InsufficientFunds,
-        UnavailableFunds
+        UnavailableFunds,
+        InvalidAmount
     }
 }

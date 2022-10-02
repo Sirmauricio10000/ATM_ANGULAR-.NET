@@ -28,10 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ATM.Data\ATM.Data.csproj" />
     <ProjectReference Include="..\ATM.Logic\ATM.Logic.csproj" />
   </ItemGroup>

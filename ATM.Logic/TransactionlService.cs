@@ -25,6 +25,18 @@ namespace ATM.Logic
         public async Task<TransactionResult> Withdraw(int amount)
         {
             var bills = await GetAmounts();
+            var minDenomination = bills.MinBy(x => x.Denomination).Denomination;
+
+            if(amount < minDenomination)
+            {
+                return new TransactionResult(TransactionStatus.InvalidAmount, message: $"El monto minimo es: {minDenomination:C}");
+            }
+
+            if(amount % minDenomination != 0)
+            {
+                return new TransactionResult(TransactionStatus.InvalidAmount, message: $"El monto debe ser multiplo de : {minDenomination:C}");
+            }
+
             var options = GenerateWithdrawalOptions(bills, amount);
 
             if(options.Result == WithdrawalResult.AvailableFunds)
@@ -38,7 +50,7 @@ namespace ATM.Logic
                     context.Add(transaction);
                     context.UpdateRange(updateBillAmounts);
                     await context.SaveChangesAsync();
-                    transactionDb.Commit();
+                    await transactionDb.CommitAsync();
                 }
 
                 return new TransactionResult(TransactionStatus.Success, chosenOption.Bills);
@@ -57,6 +69,12 @@ namespace ATM.Logic
             return (await context.Bills.AsNoTracking().ToListAsync())
                 .Select(x => new BillAmount(x.Denomination, x.Quantity));
         }
+
+        public async Task<IEnumerable<Transaction>> GetTransactionsAsync()
+        {
+            return (await context.Transactions.AsNoTracking().Include(x => x.Amount).Where(x => x.Type == TransactionType.Withdrawal).OrderByDescending(x => x.DateTime).ToListAsync());
+        }
+
         public async Task UpdateReserve(IEnumerable<BillAmount> amounts)
         {
             await VerifySupportedBills(amounts);
@@ -216,6 +234,5 @@ namespace ATM.Logic
             return (bills.ToImmutableList(), remainder);
         }
 
-        
     }
 }
