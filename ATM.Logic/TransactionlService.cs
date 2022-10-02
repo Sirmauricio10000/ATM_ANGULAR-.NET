@@ -50,7 +50,7 @@ namespace ATM.Logic
                     context.Add(transaction);
                     context.UpdateRange(updateBillAmounts);
                     await context.SaveChangesAsync();
-                    transactionDb.Commit();
+                    await transactionDb.CommitAsync();
                 }
 
                 return new TransactionResult(TransactionStatus.Success, chosenOption.Bills);
