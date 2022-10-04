@@ -12,7 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ATMContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("default"))
 );
-builder.Services.AddScoped<TransactionlService>();
+builder.Services.AddScoped<TransactionService>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(option =>
 {

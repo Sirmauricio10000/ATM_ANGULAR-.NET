@@ -51,7 +51,7 @@ public readonly struct ResultWithdrawalOption
             decimal available = availableAmounts.FirstOrDefault(i => i.Denomination == b.Denomination).Quantity;
             decimal ratioDenomination = (available == 0) ? 0 : (b.Quantity / available);
             decimal ratioDistribution = ratioTotalAmount < 0.05M ? 0.05M - ratioTotalAmount : 0;
-            return ratioDenomination * ratioDenomination + ratioDistribution;
+            return ratioDenomination.Pow(3) + ratioDistribution;
         }).Sum();
     }
 
@@ -61,6 +61,14 @@ public readonly struct ResultWithdrawalOption
                    .ExceptBy(option.Select(x => x.Denomination), b => b.Denomination)
                    .Select(x => new BillAmount(x.Denomination, 0));
     }
-
     
+}
+
+
+static class DecimalExtensions
+{
+    public static decimal Pow(this decimal value, decimal pow)
+    {
+        return ((decimal)Math.Pow(decimal.ToDouble(value), 3));
+    }
 }

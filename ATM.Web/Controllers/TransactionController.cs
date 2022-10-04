@@ -11,9 +11,9 @@ namespace ATM.Web.Controllers
     [Route("api/[controller]")]
     public class TransactionController : ControllerBase
     {
-        private readonly TransactionlService service;
+        private readonly TransactionService service;
 
-        public TransactionController(TransactionlService service)
+        public TransactionController(TransactionService service)
         {
             this.service = service;
         }

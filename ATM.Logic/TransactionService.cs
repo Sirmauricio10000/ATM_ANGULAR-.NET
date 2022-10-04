@@ -12,11 +12,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ATM.Logic
 {
-    public class TransactionlService
+    public class TransactionService
     {
         private readonly ATMContext context;
 
-        public TransactionlService(ATMContext context)
+        public TransactionService(ATMContext context)
         {
             this.context = context;
         }
@@ -223,8 +223,11 @@ namespace ATM.Logic
                     remainder = remainderResult;
                 }
 
-                bills.Add(new BillAmount(item.Denomination, quotientResult));
-
+                if(quotientResult > 0)
+                {
+                    bills.Add(new BillAmount(item.Denomination, quotientResult));
+                }
+                
                 if (remainder == 0)
                 {
                     return (bills.ToImmutableList(), 0);
